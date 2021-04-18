@@ -1,5 +1,5 @@
 # FAIRDataCube
-Design and implementation of FAIR Data Cube.
+Design and implementation of FAIR Data Cube in the [X-Omics](https://x-omics.nl/) context.
 
 Added Value:
 1. Reduce ambiguity of data, 
