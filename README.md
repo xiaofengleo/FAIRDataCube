@@ -10,7 +10,7 @@ The data usually need to be integrated with other data. In addition, the data ne
 4. Reusable
 The ultimate goal of FAIR is to optimise the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings.
 
-# FAIRDataCube
+# FAIR Data Cube
 
 Within the [X-Omics](https://x-omics.nl/) project, we are establishing a first use case of the X-omics FAIR data cube, bears the principle that data should be "as open as possible and as closed as necessary".
 
