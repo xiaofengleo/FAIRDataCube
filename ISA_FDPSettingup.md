@@ -77,6 +77,12 @@ After successfully create an Investigation, we can continue create Studies under
 @prefix foaf:     <http://xmlns.com/foaf/0.1/> .
 @prefix sh:       <http://www.w3.org/ns/shacl#> .
 @prefix dcat-ext: <http://purl.org/biosemantics-lumc/ontologies/dcat-extension/> .
+@prefix ex:       <http://www.example.com/resources/> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix con:      <http://www.w3.org/2000/10/swap/pim/contact#> .
+@prefix vcard:    <http://www.w3.org/2006/vcard/ns> .
+@prefix gnd:      <http://d-nb.info/standards/elementset/gnd> .
+@prefix frapo:     <http://purl.org/cerif/frapo/> .
 
 :InvestigationShape a sh:NodeShape ;
   sh:targetClass dcat-ext:Investigation ;
@@ -96,65 +102,88 @@ After successfully create an Investigation, we can continue create Studies under
     sh:maxCount 1 ;
     dash:editor dash:URIEditor ;
     dash:viewer dash:LabelViewer ;
-  ], [
-    sh:name "Investigation PubMed ID" ; 
-    sh:path dcterms:identifier ;
+  ], 
+  
+  [
+    sh:name "Investigation pubication" ; 
+    sh:path ex:publication ;
+    sh:node :PublicationShape ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    dash:editor dash:BlankNodeEditor ;    
+  ],
+  [
+    sh:path dcat:themeTaxonomy ;
     sh:nodeKind sh:IRI ;
-    sh:maxCount 2 ;
+    dash:viewer dash:LabelViewer ;
+  ] .
+  
+
+:PublicationShape a sh:NodeShape ;
+  sh:targetClass ex:Publication ;  
+  sh:property
+  [
+    sh:name "Investigation PubMed ID" ; 
+    sh:path ex:hasPublicationID ;
+    sh:nodeKind sh:IRI ;
     dash:editor dash:URIEditor ;
     dash:viewer dash:LabelViewer ;
   ],
   [
     sh:name "Investigation Publication DOI" ; 
-    sh:path dcterms:identifier ;
+    sh:path ex:hasDOI ;
     sh:nodeKind sh:IRI ;
-    sh:maxCount 2 ;
     dash:editor dash:URIEditor ;
     dash:viewer dash:LabelViewer ;
-  ],
-    [
+  ],  
+  [
     sh:name "Investigation Publication Author List" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
+    sh:path ex:author ;
+    sh:node :PersonShape ;
+    dash:editor dash:BlankNodeEditor ;    
   ], 
   [
     sh:name "Investigation Publication Title" ; 
-    sh:path dcterms:title ;
+    sh:path dct:title ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ], 
    [
     sh:name "Investigation Publication Status" ; 
-    sh:path dcterms:title ;
+    sh:path ex:hasStatus ;
     sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ], 
   [
     sh:name "Investigation Publication Status Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:path ex:hasAccessionNumber ;
     sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ], 
   [
     sh:name "Investigation Publication Status Term Source REF" ; 
-    sh:path dcterms:title ;
+    sh:path ex:hasStatusTerm ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ], 
-  [  sh:name "Investigation Person Last Name" ;
+  ].
+  
+  
+  
+  :PersonShape a sh:NodeShape ;
+  sh:targetClass foaf:Person ;  
+  sh:property 
+  [
+  sh:name "Person Last Name" ;
     sh:path foaf:lastName ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
     dash:viewer dash:LabelViewer ;
   ], 
-  [sh:name "Investigation Person First Name" ;
+  [
+  sh:name "Person First Name" ;
     sh:path foaf:firstName ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
@@ -162,8 +191,8 @@ After successfully create an Investigation, we can continue create Studies under
     dash:viewer dash:LabelViewer ;
   ], 
     [
-    sh:name "Investigation Person Mid Initials" ;
-    sh:path foaf:firstName ;
+    sh:name "Person Mid Initials" ;
+    sh:path frapo:initial ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -171,7 +200,7 @@ After successfully create an Investigation, we can continue create Studies under
   ], 
  
     [
-    sh:name "Investigation Person Email" ;
+    sh:name "Person Email" ;
     sh:path foaf:OnlineAccount ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
@@ -180,7 +209,7 @@ After successfully create an Investigation, we can continue create Studies under
   ], 
   
   [
-    sh:name "Investigation Person Phone" ;
+    sh:name "Person Phone" ;
     sh:path foaf:phone ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
@@ -189,8 +218,8 @@ After successfully create an Investigation, we can continue create Studies under
   ], 
   
   [
-  sh:name "Investigation Person Fax" ;
-    sh:path foaf:phone ;
+  sh:name "Person Fax" ;
+    sh:path vcard:fax ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -198,53 +227,30 @@ After successfully create an Investigation, we can continue create Studies under
   ], 
   
   [
-  sh:name "Investigation Person Address" ;
-    sh:path foaf:phone ;
+  sh:name "Person Address" ;
+    sh:path vcard:Address ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
     dash:viewer dash:LabelViewer ;
   ], 
   [
-    sh:name "Investigation Person Affiliation" ;
-    sh:path foaf:Organization ;
+    sh:name "Person Affiliation" ;
+    sh:path gnd:affiliation ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
     dash:viewer dash:LabelViewer ;
-  ], 
-  
+  ],   
   [
-    sh:name "Investigation Person Roles" ;
-    sh:path foaf:Organization ;
+    sh:name "Person Roles" ;
+    sh:path vcard:role ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
     dash:viewer dash:LabelViewer ;
-  ], 
-  
-  [
-    sh:name "Investigation Person Roles Term Accession Number" ;
-    sh:path foaf:Organization ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 1 ;
-    dash:editor dash:TextFieldEditor ;
-    dash:viewer dash:LabelViewer ;
-  ], 
-  
-  [
-    sh:name "Investigation Person Roles Term Source REF" ;
-    sh:path foaf:Organization ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 1 ;
-    dash:editor dash:TextFieldEditor ;
-    dash:viewer dash:LabelViewer ;
-  ], 
-  [
-    sh:path dcat:themeTaxonomy ;
-    sh:nodeKind sh:IRI ;
-    dash:viewer dash:LabelViewer ;
-  ] .
+  ].
+
 
 ```
 ### A.2: Shape of Study
@@ -257,6 +263,18 @@ After successfully create an Investigation, we can continue create Studies under
 @prefix sh:       <http://www.w3.org/ns/shacl#> .
 @prefix dcat-ext: <http://purl.org/biosemantics-lumc/ontologies/dcat-extension/> .
 @prefix sio: <http://semanticscience.org/resource/> . 
+@prefix ex:       <http://www.example.com/resources/> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix con:      <http://www.w3.org/2000/10/swap/pim/contact#> .
+@prefix vcard:    <http://www.w3.org/2006/vcard/ns> .
+@prefix gnd:      <http://d-nb.info/standards/elementset/gnd> .
+@prefix frapo:    <http://purl.org/cerif/frapo/> .
+@prefix dicom:    <http://purl.org/healthcarevocab/v1> .
+@prefix vartrans: <http://www.w3.org/ns/lemon/vartrans> .
+@prefix doap: <http://usefulinc.com/ns/doap> .
+@prefix irao: <http://ontology.ethereal.cz/irao> .
+@prefix transmed: <http://www.w3.org/2001/sw/hcls/ns/transmed> .
+@prefix m3-lite: <http://purl.org/iot/vocab/m3-lite> .
 
 :StudyShape a sh:NodeShape ;
   sh:targetClass dcat-ext:Study ;
@@ -274,85 +292,64 @@ sh:maxCount 1 ;
 dash:editor dash:URIEditor ;
 dash:viewer dash:LabelViewer ;
 ],
+[
+    sh:name "Study Publication" ; 
+    sh:path ex:StudyPublication ;
+    sh:node :StudyPublicationShape ;
+    dash:editor dash:BlankNodeEditor ;    
+  ], 
+
+[
+sh:name "Study Assay" ;
+sh:path ex:Assay ;
+sh:node :AssayShape ;
+dash:editor dash:BlankNodeEditor ; 
+]
+   , 
+[
+    sh:name "Study Protocol" ; 
+    sh:path ex:protocol ;
+    sh:node :ProtocolShape ;
+    dash:editor dash:BlankNodeEditor ;    
+], 
  [
-    sh:name "Study PubMed ID" ; 
-    sh:path dcterms:identifier ;
-    sh:nodeKind sh:IRI ;
-    sh:maxCount 2 ;
-    dash:editor dash:URIEditor ;
-    dash:viewer dash:LabelViewer ;
-  ],
-  [
-    sh:name "Study Publication DOI" ; 
-    sh:path dcterms:identifier ;
-    sh:nodeKind sh:IRI ;
-    sh:maxCount 2 ;
-    dash:editor dash:URIEditor ;
-    dash:viewer dash:LabelViewer ;
-  ],
-    [
-    sh:name "Study Publication Author List" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ], 
-  [
-    sh:name "Study Publication Title" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ], 
-   [
-    sh:name "Study Publication Status" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ], 
-  [
-    sh:name "Study Publication Status Term Accession Number" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ], 
-  [
-    sh:name "Study Publication Status Term Source REF" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ] , 
-  [
-    sh:name "Study Assay File Name" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ]  , 
+    sh:name "Study Person" ; 
+    sh:path ex:StudyPerson ;
+    sh:node :StudyPersonShape ;
+    dash:editor dash:BlankNodeEditor ;    
+  ].
+  
+  
+  
+  
+  :AssayMeasurementShape a sh:NodeShape ;
+  sh:targetClass ex:AssayMeasurementShape ;  
+  sh:property
   [
     sh:name "Study Assay Measurement Type" ; 
-    sh:path dcterms:title ;
+    sh:path m3-lite:MeasurementType ; 
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ]  , 
   [
     sh:name "Study Assay Measurement Type Term Source REF" ; 
-    sh:path dcterms:title ;
+    sh:path vartrans:source ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ]  , 
   [
     sh:name "Study Assay Measurement Type Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:AccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ]  , 
+  ]  .
+  
+  :AssayTechnologyShape a sh:NodeShape ;
+  sh:targetClass ex:AssayTechnologyShape ;  
+  sh:property 
   [
     sh:name "Study Assay Technology Type" ; 
     sh:path dcterms:title ;
@@ -362,124 +359,248 @@ dash:viewer dash:LabelViewer ;
   ]   , 
   [
     sh:name "Study Assay Technology Type Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:AccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ]   , 
   [
     sh:name "Study Assay Technology Type Term Source REF" ; 
-    sh:path dcterms:title ;
+    sh:path  vartrans:source ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ] , 
   [
     sh:name "Study Assay Technology Platform	U-PLEX" ; 
-    sh:path dcterms:title ;
+    sh:path doap:platform ; 
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ] .
+  
+  
+  :AssayShape a sh:NodeShape ;
+  sh:targetClass ex:Assay ;
+  sh:property
+  
+  [
+    sh:name "Study Assay File Name" ; 
+    sh:path transmed:TMO_0076 ; 
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ]  , 
   [
-    sh:name "Study Protocol Name" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
+    sh:name "Study Assay Measurement" ; 
+    sh:path ex:AssayMeasurementShape ;
+    sh:node :AssayMeasurementShape ;
+    dash:editor dash:BlankNodeEditor ;    
+], 
+[
+    sh:name "Study Assay Technology" ; 
+    sh:path ex:AssayTechnologyShape ;
+    sh:node :AssayTechnologyShape;
+    dash:editor dash:BlankNodeEditor ;    
+].
+  
+
+  
+  
+  
+  
+  :StudyPublicationShape a sh:NodeShape ;
+  sh:targetClass ex:StudyPublication ;  
+  sh:property
+   [
+    sh:name "Study PubMed ID" ; 
+    sh:path ex:hasPublicationID ;
+    sh:nodeKind sh:IRI ;
     sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ]  , 
+    dash:editor dash:URIEditor ;
+    dash:viewer dash:LabelViewer ;
+  ],
   [
-    sh:name "Study Protocol Type" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
+    sh:name "Study Publication DOI" ; 
+    sh:path ex:hasDOI ;
+    sh:nodeKind sh:IRI ;
     sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ]  , 
+    dash:editor dash:URIEditor ;
+    dash:viewer dash:LabelViewer ;
+  ],
+    [
+    sh:name "Study Publication Author List" ; 
+    sh:path ex:author ;
+    sh:node :PersonShape ;
+    dash:editor dash:BlankNodeEditor ;  
+  ], 
   [
-    sh:name "Study Protocol Type Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:name "Study Publication Title" ; 
+    sh:path dct:title ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ]  , 
+  ], 
+   [
+    sh:name "Study Publication Status" ; 
+    sh:path ex:hasStatus ;
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ], 
   [
-    sh:name "Study Protocol Type Term Source REF" ; 
-    sh:path dcterms:title ;
+    sh:name "Study Publication Status Term Accession Number" ; 
+    sh:path ex:hasAccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ]  , 
+  ], 
   [
-    sh:name "Study Protocol Description" ; 
-    sh:path dcterms:title ;
+    sh:name "Study Publication Status Term Source REF" ; 
+    sh:path ex:hasStatusTerm ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ]  , 
-  [
-    sh:name "Study Protocol URI" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ]  , 
-  [
-    sh:name "Study Protocol Version" ; 
-    sh:path dcterms:title ;
-    sh:nodeKind sh:Literal ;
-    sh:maxCount 2 ;
-    dash:editor dash:TextFieldEditor ;
-  ]  , 
+  ].
+ 
+ 
+ 
+ 
+ 
+  :StudyProtocolParameters a sh:NodeShape ;
+   sh:targetClass ex:StudyProtocolParameters ;
+   sh:property 
   [
     sh:name "Study Protocol Parameters Name" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:ProtocolName ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ]  , 
   [
     sh:name "Study Protocol Parameters Name Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:AccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ] , 
   [
     sh:name "Study Protocol Parameters Name Term Source REF	" ; 
-    sh:path dcterms:title ;
+    sh:path vartrans:source ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ] , 
+  ] .
+  
+   :StudyProtocolComponent a sh:NodeShape ;
+   sh:targetClass ex:StudyProtocolComponent ;
+   sh:property 
   [
     sh:name "Study Protocol Components Name" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:ProtocolName ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ] , 
   [
     sh:name "Study Protocol Components Type" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:PerformedProtocolType ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ] , 
   [
     sh:name "Study Protocol Components Type Term Accession Number" ; 
-    sh:path dcterms:title ;
+    sh:path dicom:AccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
   ] , 
   [
     sh:name "Study Protocol Components Type Term Source REF" ; 
-    sh:path dcterms:title ;
+    sh:path vartrans:source ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 2 ;
     dash:editor dash:TextFieldEditor ;
-  ],
-    [  
+  ].
+  
+  
+  :ProtocolShape a sh:NodeShape ;
+  sh:targetClass ex:Protocol ;  
+  sh:property 
+   [
+    sh:name "Study Protocol Name" ; 
+    sh:path dicom:ProtocolName ;
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol Type" ; 
+    sh:path dicom:PerformedProtocolType ; 
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol Type Term Accession Number" ; 
+    sh:path dicom:AccessionNumber ;
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol Type Term Source REF" ; 
+    sh:path vartrans:source ;
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol Description" ; 
+    sh:path dcterms:description ;
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol URI" ; 
+    sh:path irao:Protocol ; 
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  [
+    sh:name "Study Protocol Version" ; 
+    sh:path doap:Version ; 
+    sh:nodeKind sh:Literal ;
+    sh:maxCount 2 ;
+    dash:editor dash:TextFieldEditor ;
+  ]  , 
+  
+  [
+    sh:name "Study Protocol Parameters" ; 
+    sh:path ex:StudyProtocolParameters ;
+    sh:node :StudyProtocolParameters ;
+    dash:editor dash:BlankNodeEditor ;    
+  ], 
+  [
+    sh:name "Study Protocol Component" ; 
+    sh:path ex:StudyProtocolComponent;
+    sh:node :StudyProtocolComponent ;
+    dash:editor dash:BlankNodeEditor ;    
+  ].
+  
+  
+  
+  
+  
+  
+  
+  :StudyPersonShape a sh:NodeShape ;
+  sh:targetClass foaf:Person ;  
+  sh:property 
+     [  
   sh:name "Study Person Last Name" ;
     sh:path foaf:lastName ;
     sh:nodeKind sh:Literal ;
@@ -497,7 +618,7 @@ dash:viewer dash:LabelViewer ;
   ], 
     [
     sh:name "Study Person Mid Initials" ;
-    sh:path foaf:firstName ;
+    sh:path frapo:initial ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -521,7 +642,7 @@ dash:viewer dash:LabelViewer ;
   ],  
   [
     sh:name "Study Person Fax" ;
-    sh:path foaf:phone ;
+    sh:path vcard:fax ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -529,7 +650,7 @@ dash:viewer dash:LabelViewer ;
   ], 
   [
     sh:name "Study Person Address" ;
-    sh:path foaf:phone ;
+    sh:path vcard:Address ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -537,7 +658,7 @@ dash:viewer dash:LabelViewer ;
   ],  
   [
     sh:name "Study Person Affiliation" ;
-    sh:path foaf:Organization ;
+    sh:path gnd:affiliation ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -545,7 +666,7 @@ dash:viewer dash:LabelViewer ;
   ],
   [
     sh:name "Study Person Roles" ;
-    sh:path foaf:Organization ;
+    sh:path vcard:role ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -553,7 +674,7 @@ dash:viewer dash:LabelViewer ;
   ],
   [
     sh:name "Study Person Roles Term Accession Number" ;
-    sh:path foaf:Organization ;
+    sh:path dicom:AccessionNumber ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
@@ -561,7 +682,7 @@ dash:viewer dash:LabelViewer ;
   ],
   [
     sh:name "Study Person Roles Term Source REF" ;
-    sh:path foaf:Organization ;
+    sh:path vartrans:source ;
     sh:nodeKind sh:Literal ;
     sh:maxCount 1 ;
     dash:editor dash:TextFieldEditor ;
