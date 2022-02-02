@@ -6,7 +6,9 @@
   
        c.	wait for the results.
   
-  
+       d. the researcher could communicate with the dataset owner regaring the metadata provided
+       
+       
 2.	The Vantage6 server 
 
 
@@ -31,3 +33,5 @@
       a.	Prepare/Standardize/Ontologize metadata
   
       b.	Submit metadata via script or manually
+      
+      c. the dataset owner take responsibility to examine the coputation request and supervise the running of the script.
