@@ -1,3 +1,5 @@
+#For latest info, please visit https://github.com/Xomics/FAIRDataCube
+
 
 # Added Value for being FAIR
 Boost Open Science via increase Findability, Accessibility, Interoperability and Reusability. 
